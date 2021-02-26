@@ -10,6 +10,17 @@ sys.path.insert(0, os.path.dirname(AWSIoTPythonSDK.__file__))
 # Now the import statement should work
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
+#Setting serial
+#Setting serial port parameters
+serial_port_velocity = "COM3" ## set your serial port
+serial_baudrate_velocity = 9600 ## set your baudrate
+serial_timeout_velocity = 1 ## set your serial timeout
+
+serial_port_steering = "/dev/ttyACM0" ## set your serial port
+serial_baudrate_steering = 9600 ## set your baudrate
+serial_timeout_steering = 1 ## set your serial timeout
+
+
 #Setting GPIO
 GPIO.setmode(GPIO.BOARD)
 velocity_dir_gpio_port = 16
@@ -20,7 +31,7 @@ GPIO.setup(velocity_power_gpio_port, GPIO.OUT)
 ##Setting the initial parameters for velocity and steering
 sleep_timer = 0.1
 output_velocity = "gpio" ## can be "print", "gpio" or "serial"
-output_steering = "print" ## can be "print", "gpio" or "serial"
+output_steering = "serial" ## can be "print", "gpio" or "serial"
 
 if output_velocity == "serial":
     ser_velocity = Serial(serial_port_velocity, baudrate=serial_baudrate_velocity, timeout=serial_timeout_velocity)
@@ -57,8 +68,6 @@ def listener_velocity(self, params, packet):
 	elif output_velocity == "serial":
 		 ser_velocity.write(packet.payload)
 	elif output_velocity == "gpio":
-		while not packet.payload:
-			print("low")
 		if packet.payload == b'w':
 			print("sending HIGH to dir")
 			#GPIO.output(velocity_dir_gpio_port, 1)
@@ -66,6 +75,7 @@ def listener_velocity(self, params, packet):
 		elif packet.payload == b's':
 			print("sending LOW to dir")
 			print ("sending HIGH to speed")
+
 
 
 def listener_steering(self, params, packet):
