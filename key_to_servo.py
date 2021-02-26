@@ -62,7 +62,7 @@ def listener_velocity(self, params, packet):
 			print("sending HIGH to dir")
 			#GPIO.output(velocity_dir_gpio_port, 1)
 			print("sending HIGH to speed")
-		elif packet.payload = b's':
+		elif packet.payload == b's':
 			print("sending LOW to dir")
 			print ("sending HIGH to speed")
 		else:
