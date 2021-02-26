@@ -61,8 +61,8 @@ def listener_velocity(self, params, packet):
 			print("sending HIGH to dir")
 			#GPIO.output(velocity_dir_gpio_port, 1)
 			print("sending HIGH to speed")
-    print(packet.payload)
-	print("sending LOW to dir")
+		print(packet.payload)
+		print("sending LOW to dir")
 
 
 def listener_steering(self, params, packet):
