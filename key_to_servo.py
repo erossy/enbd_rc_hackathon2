@@ -65,8 +65,7 @@ def listener_velocity(self, params, packet):
 		elif packet.payload == b's':
 			print("sending LOW to dir")
 			print ("sending HIGH to speed")
-		else:
-			print("velocity reset")
+	print("sending low to both")
 
 
 def listener_steering(self, params, packet):
