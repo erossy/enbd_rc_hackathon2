@@ -1,4 +1,5 @@
-from serial import Serial
+
+#from serial import Serial
 from time import sleep
 from pynput import keyboard
 velocity = "0"
