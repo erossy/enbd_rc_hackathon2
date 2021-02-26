@@ -17,16 +17,8 @@ serial_baudrate_velocity = 9600 ## set your baudrate
 serial_timeout_velocity = 1 ## set your serial timeout
 
 serial_port_steering = "/dev/ttyACM0" ## set your serial port
-serial_baudrate_steering = 9600 ## set your baudrate
+serial_baudrate_steering = 115200 ## set your baudrate
 serial_timeout_steering = 1 ## set your serial timeout
-
-
-#Setting GPIO
-GPIO.setmode(GPIO.BOARD)
-velocity_dir_gpio_port = 16
-velocity_power_gpio_port = 18
-GPIO.setup(velocity_dir_gpio_port, GPIO.OUT)
-GPIO.setup(velocity_power_gpio_port, GPIO.OUT)
 
 ##Setting the initial parameters for velocity and steering
 sleep_timer = 0.1
@@ -82,7 +74,8 @@ def listener_steering(self, params, packet):
 	if output_steering == "print":
 		print (packet.payload)
 	elif output_steering == "serial":
-		ser_steering.write("s")
+
+		ser_steering.write(packet.payload)
 		print(packet.payload)
 
 
