@@ -57,7 +57,7 @@ def listener_velocity(self, params, packet):
 	elif output_velocity == "serial":
 		 ser_velocity.write(packet.payload)
 	elif output_velocity == "gpio":
-		while (packet.payload not in [b'w',b's']):
+		while not packet.payload:
 			print("low")
 		if packet.payload == b'w':
 			print("sending HIGH to dir")
