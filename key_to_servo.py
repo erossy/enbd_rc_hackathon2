@@ -67,9 +67,9 @@ def listener_velocity(self, params, packet):
 def listener_steering(self, params, packet):
  if output_steering == "print":
     print (packet.payload)
-elif output_steering == "serial":
+ elif output_steering == "serial":
      ser_steering.write(packet.payload)
-elif output_steering = "gpio":
+ elif output_steering = "gpio":
 	if packet.payload == "d":
 		 SetAngle(90)
 	elif packet.payload == "a":
