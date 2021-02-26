@@ -82,7 +82,7 @@ def listener_steering(self, params, packet):
 	if output_steering == "print":
 		print (packet.payload)
 	elif output_steering == "serial":
-		ser_steering.write(packet.payload)
+		ser_steering.write("s")
 		print(packet.payload)
 
 
