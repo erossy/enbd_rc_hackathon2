@@ -53,9 +53,7 @@ def SetAngle(angle):
 	duty = angle / 18 + 2
 	GPIO.output(pwm_pin, True)
 	pwm.ChangeDutyCycle(duty)
-	sleep(1)
-	GPIO.output(pwm_pin, False)
-	pwm.ChangeDutyCycle(0)
+
 
 def listener_velocity(self, params, packet):
  if output_velocity == "print":
@@ -74,7 +72,7 @@ def listener_steering(self, params, packet):
 			SetAngle(90)
 		elif packet.payload == "a":
 			SetAngle(0)
-		SetAngle(45)
+
 
 
 def on_press(key):
