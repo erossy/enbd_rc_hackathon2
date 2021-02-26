@@ -11,16 +11,16 @@ sys.path.insert(0, os.path.dirname(AWSIoTPythonSDK.__file__))
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 #Setting GPIO
-pwm_pin = 11
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(pwm_pin, GPIO.OUT)
-pwm=GPIO.PWM(pwm_pin, 50)
-pwm.start(0)
+velocity_dir_gpio_port = 16
+velocity_power_gpio_port = 18
+GPIO.setup(velocity_dir_gpio_port, GPIO.OUT)
+GPIO.setup(velocity_power_gpio_port, GPIO.OUT)
 
 ##Setting the initial parameters for velocity and steering
 sleep_timer = 0.1
-output_velocity = "print" ## can be "print", "gpio" or "serial"
-output_steering = "gpio" ## can be "print", "gpio" or "serial"
+output_velocity = "gpio" ## can be "print", "gpio" or "serial"
+output_steering = "print" ## can be "print", "gpio" or "serial"
 
 if output_velocity == "serial":
     ser_velocity = Serial(serial_port_velocity, baudrate=serial_baudrate_velocity, timeout=serial_timeout_velocity)
@@ -49,17 +49,19 @@ myMQTTClient.configureDrainingFrequency(2)
 myMQTTClient.configureConnectDisconnectTimeout(10)
 myMQTTClient.configureMQTTOperationTimeout(5)
 
-def SetAngle(angle):
-	duty = angle / 18 + 2
-	GPIO.output(pwm_pin, True)
-	pwm.ChangeDutyCycle(duty)
 
 
 def listener_velocity(self, params, packet):
- if output_velocity == "print":
-    print (packet.payload)
- elif output_velocity == "serial":
-     ser_velocity.write(packet.payload)
+	if output_velocity == "print":
+		print (packet.payload)
+	elif output_velocity == "serial":
+		 ser_velocity.write(packet.payload)
+	elif output_steering == "gpio":
+		if packet.payload == "w":
+			print("sending HIGH to dir")
+			#GPIO.output(velocity_dir_gpio_port, 1)
+			print("sending HIGH to speed")
+	print("sending LOW to dir")
 
 
 def listener_steering(self, params, packet):
