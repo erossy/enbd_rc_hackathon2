@@ -12,8 +12,5 @@ def SetAngle(angle):
 	sleep(1)
 	GPIO.output(pwm_pin, False)
 	pwm.ChangeDutyCycle(0)
-SetAngle(90)
-sleep(7)
-SetAngle(0)
-sleep(7)
-SetAngle(45)
+for i in range (45, 90):
+    SetAngle(i)
