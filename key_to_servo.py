@@ -82,7 +82,7 @@ def on_press(key):
     try:
         pass
     except AttributeError:
-        passfdsfs
+        pass
 
 def on_release(key):
     try:
