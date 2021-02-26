@@ -57,7 +57,8 @@ def listener_velocity(self, params, packet):
 	elif output_velocity == "serial":
 		 ser_velocity.write(packet.payload)
 	elif output_velocity == "gpio":
-		print(packet.payload)
+		while (packet.payload not in [b'w';b's']):
+			print("low")
 		if packet.payload == b'w':
 			print("sending HIGH to dir")
 			#GPIO.output(velocity_dir_gpio_port, 1)
@@ -65,7 +66,6 @@ def listener_velocity(self, params, packet):
 		elif packet.payload == b's':
 			print("sending LOW to dir")
 			print ("sending HIGH to speed")
-	print("sending low to both")
 
 
 def listener_steering(self, params, packet):
