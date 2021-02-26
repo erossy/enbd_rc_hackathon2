@@ -14,3 +14,4 @@ def SetAngle(angle):
 	pwm.ChangeDutyCycle(0)
 for i in range (45, 90):
     SetAngle(i)
+    i=i+5
