@@ -12,7 +12,7 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 #Setting serial
 #Setting serial port parameters
-serial_port_velocity = "COM3" ## set your serial port
+serial_port_velocity = "/dev/ttyACM0" ## set your serial port
 serial_baudrate_velocity = 9600 ## set your baudrate
 serial_timeout_velocity = 1 ## set your serial timeout
 
@@ -22,8 +22,8 @@ serial_timeout_steering = 1 ## set your serial timeout
 
 ##Setting the initial parameters for velocity and steering
 sleep_timer = 0.1
-output_velocity = "gpio" ## can be "print", "gpio" or "serial"
-output_steering = "serial" ## can be "print", "gpio" or "serial"
+output_velocity = "serial" ## can be "print", "gpio" or "serial"
+output_steering = "print" ## can be "print", "gpio" or "serial"
 
 if output_velocity == "serial":
     ser_velocity = Serial(serial_port_velocity, baudrate=serial_baudrate_velocity, timeout=serial_timeout_velocity)
@@ -59,14 +59,7 @@ def listener_velocity(self, params, packet):
 		print (packet.payload)
 	elif output_velocity == "serial":
 		 ser_velocity.write(packet.payload)
-	elif output_velocity == "gpio":
-		if packet.payload == b'w':
-			print("sending HIGH to dir")
-			#GPIO.output(velocity_dir_gpio_port, 1)
-			print("sending HIGH to speed")
-		elif packet.payload == b's':
-			print("sending LOW to dir")
-			print ("sending HIGH to speed")
+
 
 
 
