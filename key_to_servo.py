@@ -30,9 +30,9 @@ if output_steering == "serial":
 
 ##Setting MQTT client variables (adjust certs paths and client name)
 client_name = "Mikhail_PC_listen"
-root_ca_path = "C:\\Users\\veltu\\PycharmProjects\\hackathon\\root-ca.pem"
-private_key_path = "C:\\Users\\veltu\\PycharmProjects\\hackathon\\private.pem.key"
-cert_path = "C:\\Users\\veltu\\PycharmProjects\\hackathon\\certificate.pem.crt"
+root_ca_path = "root-ca.pem"
+private_key_path = "private.pem.key"
+cert_path = "certificate.pem.crt"
 
 ##Don't touch the following parameters
 MQTT_endpoint_url = "a1v7jr8kt53ffp-ats.iot.me-south-1.amazonaws.com"
