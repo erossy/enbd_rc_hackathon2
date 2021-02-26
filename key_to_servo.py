@@ -76,6 +76,7 @@ def listener_steering(self, params, packet):
 	elif output_steering == "serial":
 		ser_steering.write(packet.payload)
 		print(packet.payload)
+		sleep(0.5)
 
 
 
