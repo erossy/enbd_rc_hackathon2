@@ -58,7 +58,7 @@ def listener_velocity(self, params, packet):
 		 ser_velocity.write(packet.payload)
 	elif output_velocity == "gpio":
 		print(packet.payload)
-		if packet.payload.decode("utf-8") == "w":
+		if packet.payload == b'w':
 			print("sending HIGH to dir")
 			#GPIO.output(velocity_dir_gpio_port, 1)
 			print("sending HIGH to speed")
