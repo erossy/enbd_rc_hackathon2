@@ -3,10 +3,10 @@ from time import sleep
 from time import sleep
 from serial import Serial
 from pynput import keyboard
-import os
-import sys
-import AWSIoTPythonSDK
-sys.path.insert(0, os.path.dirname(AWSIoTPythonSDK.__file__))
+# import os
+# import sys
+# import AWSIoTPythonSDK
+# sys.path.insert(0, os.path.dirname(AWSIoTPythonSDK.__file__))
 # Now the import statement should work
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 

@@ -29,22 +29,6 @@ void loop()
 {
   while(Serial.available()) // Condition: Serial up
   {
-    char c = Serial.read(); // Reading serial input as char
-    readString += c; // Adding serial input to string to allow "if" conditions
-    String message = readString + " is pressed  --- pwm power = " + String(current_power);
-    Serial.println(message);
-  Serial.println(readString);
-  while (current_power > 0 && readString != "w" && readString != "s") // default velocity
-  {
-      //digitalWrite(in1, LOW);
-      //digitalWrite(in2, LOW);
-      //current_power = 0;
-      //analogWrite(enA, current_power);
-      //String message = "No interesting keys are pressed... idling" + String(current_power);
-      //Serial.println(message);
-      //char c = Serial.read();
-      //readString += c;
-   }
     while(readString == "w") // Forward
     {
       readString = "";
