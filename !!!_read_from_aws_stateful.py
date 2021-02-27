@@ -91,6 +91,18 @@ def on_release(key):
         pass
 
 
+def send_to_serial():
+    global ser_send
+    global ser_queue
+    if len(ser_queue) > 0:
+        ser_send = ser_queue.pop(-1)
+        ser_queue = []
+    print("Writing to serial: " + ser_send.decode())
+    ser.write(ser_send)
+    print(ser.readline())
+    sleep(sleep_timer)
+
+
 # Collect events until released
 listener = keyboard.Listener(
     on_press=on_press,
@@ -107,9 +119,4 @@ myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
 
 while listener.running:
-    if len(ser_queue) > 0:
-        ser_send = ser_queue.pop(-1)
-        ser_queue = []
-    print("Writing to serial: " + ser_send.decode())
-    ser.write(ser_send)
-    print(ser.readline())
+    send_to_serial()

@@ -128,4 +128,4 @@ listener = keyboard.Listener(
 listener.start()
 
 while listener.running:
-    sleep(sleep_timer)
+    sleep(sleep_timer*2)
