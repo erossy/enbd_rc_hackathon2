@@ -1,5 +1,6 @@
 # import time
 from time import sleep
+import serial
 from serial import Serial
 from serial import serialutil
 from pebble import concurrent
@@ -26,7 +27,7 @@ counter = []
 try:
     ser = Serial(serial_port, baudrate=serial_baudrate, timeout=serial_timeout)
     print("The port {0} is available".format(ser))
-except serialutil.SerialException:
+except serial.serialutil.SerialException:
     print("The port is at use, attempting to close and reopen")
     ser.close()
     ser.open()
