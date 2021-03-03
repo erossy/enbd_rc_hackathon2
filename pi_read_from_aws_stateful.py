@@ -72,8 +72,8 @@ def send_to_serial():
         ser_queue = []
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
-    print(ser.readline().decode().trim())
-    counter.append(ser.readline().decode().trim())
+    print(ser.readline().decode().strip())
+    counter.append(ser.readline().decode().strip())
     print(len(counter))
     sleep(sleep_timer)
 
