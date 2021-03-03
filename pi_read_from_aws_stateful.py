@@ -92,7 +92,7 @@ def send_to_serial():
         try:
             result = future.result()  # blocks until results are ready
         except TimeoutError:
-            print("Function took longer than {0} seconds.".format(sleep_timer*10)
+            print("Function took longer than {0} seconds.".format(sleep_timer*10))
             ser.close()
             ser.open()
     sleep(sleep_timer)
