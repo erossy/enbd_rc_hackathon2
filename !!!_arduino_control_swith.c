@@ -2,12 +2,11 @@
 
 // MOTOR VARIABLES
 int break_power = 15;
-int current_forward_power = 15;
-int current_backward_power = 15;
+int current_power = break_power;
 int PWM = 11;            // PWM
 int DIR = 8;            // DIRECTION
 int RESET = 7;          // RESET
-int min_power = 20;     // Minimum Power
+int min_power = 40;     // Minimum Power
 int max_power = 60;    // Maximum Power
 int dir_value = HIGH;
 
@@ -36,6 +35,7 @@ void setup() {
   pinMode(RESET, OUTPUT);
   digitalWrite(RESET, HIGH);
   Serial.println("Motor driver instantiated.");
+
 }
 void loop() {
   while(Serial.available()){ // Condition: Serial up
@@ -51,14 +51,14 @@ void loop() {
           dir_value = HIGH;
            digitalWrite(DIR, dir_value);
         }
-        if(current_forward_power < 20){
-          current_forward_power = 20; // Mikhail's patented smoothness magic
-          analogWrite(PWM,current_forward_power);
+        if(current_power < min_power){
+          current_power = min_power; // Mikhail's patented smoothness magic
+          analogWrite(PWM,current_power);
         }
-        if(current_forward_power < max_power){
-          current_forward_power = current_forward_power + 1;
-          analogWrite(PWM,current_forward_power);
-          Serial.println("New forward power: " + current_forward_power);
+        if(current_power < max_power){
+          current_power = current_power + 1;
+          analogWrite(PWM,current_power);
+          Serial.println("New forward power: " + current_power);
         }
         break;
       //
@@ -69,8 +69,7 @@ void loop() {
           myservo.write(current_position);
         }
         analogWrite(PWM,break_power);
-        current_forward_power = break_power;
-        current_backward_power = break_power;
+        current_power = break_power;
         break;
       //
       case 'e': // insert forward-right function here
@@ -79,26 +78,25 @@ void loop() {
           dir_value = HIGH;
            digitalWrite(DIR, dir_value);
         }
-        if(current_forward_power < 20){
-          current_forward_power = 20; // Mikhail's patented smoothness magic
-          analogWrite(PWM,current_forward_power);
+         if(current_power < min_power){
+          current_power = min_power; // Mikhail's patented smoothness magic
+          analogWrite(PWM,current_power);
         }
         if (current_position != max_right){
           current_position = max_right;
           myservo.write(current_position);
         }
-        if(current_forward_power < max_power){
-          current_forward_power = current_forward_power + 1;
-          analogWrite(PWM,current_forward_power);
-          Serial.println("New forward power: " + current_forward_power);
+        if(current_power < max_power){
+          current_power = current_power + 1;
+          analogWrite(PWM,current_power);
+          Serial.println("New forward power: " + current_power);
         }
         break;
       //
       case 'd': // insert right function here
         Serial.println("RIGHT");
         analogWrite(PWM,break_power);
-        current_forward_power = break_power;
-        current_backward_power = break_power;
+        current_power = break_power;
         if (current_position != max_right){
           current_position = max_right;
           myservo.write(current_position);
@@ -110,18 +108,18 @@ void loop() {
           dir_value = LOW;
            digitalWrite(DIR, dir_value);
         }
-        if(current_backward_power < 20){
-          current_backward_power = 20; // Mikhail's patented smoothness magic
-          analogWrite(PWM,current_backward_power);
+         if(current_power < min_power){
+          current_power = min_power; // Mikhail's patented smoothness magic
+          analogWrite(PWM,current_power);
         }
         if (current_position != max_right){
           current_position = max_right;
           myservo.write(current_position);
         }
-        if(current_backward_power < max_power){
-          current_backward_power = current_backward_power + 1;
-          analogWrite(PWM,current_backward_power);
-          Serial.println("New forward power: " + current_backward_power);
+        if(current_power < max_power){
+          current_power = current_power + 1;
+          analogWrite(PWM,current_power);
+          Serial.println("New forward power: " + current_power);
         }
         break;
       case 'x':
@@ -134,14 +132,14 @@ void loop() {
           dir_value = LOW;
            digitalWrite(DIR, dir_value);
         }
-        if(current_backward_power < 20){
-          current_backward_power = 20; // Mikhail's patented smoothness magic
-          analogWrite(PWM,current_backward_power);
+       if(current_power < min_power){
+          current_power = min_power; // Mikhail's patented smoothness magic
+          analogWrite(PWM,current_power);
         }
-        if(current_backward_power < max_power){
-          current_backward_power = current_backward_power + 1;
-          analogWrite(PWM,current_backward_power);
-          Serial.println("New backward power: " + current_backward_power);
+        if(current_power < max_power){
+          current_power = current_power + 1;
+          analogWrite(PWM,current_power);
+          Serial.println("New backward power: " + current_power);
         }
         break;
       case 'z':
@@ -150,25 +148,24 @@ void loop() {
           dir_value = LOW;
            digitalWrite(DIR, dir_value);
         }
-        if(current_backward_power < 20){
-          current_backward_power = 20; // Mikhail's patented smoothness magic
-          analogWrite(PWM,current_backward_power);
+        if(current_power < min_power){
+          current_power = min_power; // Mikhail's patented smoothness magic
+          analogWrite(PWM,current_power);
         }
         if (current_position != max_left){
           current_position = max_left;
           myservo.write(current_position);
         }
-        if(current_backward_power < max_power){
-          current_backward_power = current_backward_power + 1;
-          analogWrite(PWM,current_backward_power);
-          Serial.println("New forward power: " + current_backward_power);
+        if(current_power < max_power){
+          current_power = current_power + 1;
+          analogWrite(PWM,current_power);
+          Serial.println("New forward power: " + current_power);
         }
         break;
       case 'a':
         Serial.println("LEFT");
         analogWrite(PWM,break_power);
-        current_forward_power = break_power;
-        current_backward_power = break_power;
+        current_power = break_power;
         if (current_position != max_left){
           current_position = max_left;
           myservo.write(current_position);
@@ -180,18 +177,18 @@ void loop() {
           dir_value = HIGH;
            digitalWrite(DIR, dir_value);
         }
-        if(current_forward_power < 20){
-          current_forward_power = 20; // Mikhail's patented smoothness magic
-          analogWrite(PWM,current_forward_power);
+        if(current_power < min_power){
+          current_power = min_power; // Mikhail's patented smoothness magic
+          analogWrite(PWM,current_power);
         }
         if (current_position != max_left){
           current_position = max_left;
           myservo.write(current_position);
         }
-        if(current_forward_power < max_power){
-          current_forward_power = current_forward_power + 1;
-          analogWrite(PWM,current_forward_power);
-          Serial.println("New forward power: " + current_forward_power);
+        if(current_power < max_power){
+          current_power = current_power + 1;
+          analogWrite(PWM,current_power);
+          Serial.println("New forward power: " + current_power);
         }
     }
   }
