@@ -70,7 +70,7 @@ def send_to_serial():
         ser_queue = []
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
-    print(ser.readline())
+    print(ser.readline().decode())
     sleep(sleep_timer)
 
 
@@ -102,6 +102,3 @@ while True:
             print("Serial port closed with error")
             pass
         print("Listener stopped")
-    except AWSIoTPythonSDK.exception.AWSIoTExceptions.connectTimeoutException:
-            myMQTTClient.connect()
-            myMQTTClient.subscribe("home/velocity", 1, listener_aws)
