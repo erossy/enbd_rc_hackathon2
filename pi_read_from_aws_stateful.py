@@ -79,7 +79,7 @@ def send_to_serial():
         ser.write(ser_send)
         try:
             print(ser.readline().decode().strip())
-        except UnicodeDecodeError, serialutil.SerialException:
+        except (UnicodeDecodeError ,serialutil.SerialException) as serial_error:
             print("###_Serial error, resetting serial...###")
             ser.close()
             ser.open()
