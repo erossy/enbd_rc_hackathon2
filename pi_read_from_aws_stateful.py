@@ -1,5 +1,6 @@
 # import time
 from time import sleep
+import serial
 from serial import Serial
 from serial import serialutil
 from pebble import ProcessPool
@@ -69,6 +70,13 @@ def listener_aws(self, params, packet):
         myMQTTClient.connect()
         myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
+def serial_test():
+    try:
+        print(ser.readline().decode().strip())
+    except (UnicodeDecodeError, serial.serialutil.SerialException) as serial_error:
+        print("###_Serial error, resetting serial...###")
+        ser.close()
+        ser.open()
 
 def send_to_serial():
     global ser_send
@@ -78,12 +86,14 @@ def send_to_serial():
         ser_queue = []
     print("Writing to serial: " + ser_send.decode()) ## this guy hangs
     ser.write(ser_send)
-    try:
-        print(ser.readline().decode().strip())
-    except (UnicodeDecodeError ,serialutil.SerialException) as serial_error:
-        print("###_Serial error, resetting serial...###")
-        ser.close()
-        ser.open()
+    with ProcessPool(max_workers=1, max_tasks=1) as pool:
+        future = pool.schedule(serial_test, timeout=sleep_timer*3)
+        try:
+            result = future.result()  # blocks until results are ready
+        except TimeoutError:
+            print("Function took longer than {0} seconds.".format(sleep_timer*3))
+            ser.close()
+            ser.open()
     sleep(sleep_timer)
 
 # Collect events until released
