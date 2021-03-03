@@ -1,8 +1,9 @@
-import time
+# import time
 from time import sleep
 from serial import Serial
 from serial import serialutil
-from multiprocessing import Process
+from pebble import concurrent
+from concurrent.futures import TimeoutError
 # from pynput import keyboard
 # from statistics import mean
 # import os
@@ -61,7 +62,7 @@ def listener_aws(self, params, packet):
     try:
         if len(ser_queue) == 0:
             ser_queue.append(packet.payload)
-            ser.write(packet.payload)
+            #ser.write(packet.payload)
         print("Current queue: ")
         print(ser_queue)
     except AWSIoTMQTTClientSDK.exception.AWSIoTExceptions.connectTimeoutException:
@@ -69,6 +70,8 @@ def listener_aws(self, params, packet):
         myMQTTClient.connect()
         myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
+
+@concurrent.process(timeout=0.5)
 def send_to_serial():
     global ser_send
     global ser_queue
@@ -95,12 +98,13 @@ print('Connected')
 # MQTT subscription
 myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
+future = send_to_serial()
 
 while True:
     try:
-        ser.open()
-        send_to_serial()
-        ser.close()
+        result = future.result()
+    except TimeoutError:
+        print("Serial iteration took longer than 0.5 seconds.")
     except KeyboardInterrupt:
         ser.close()
         MQTT.disconnect()
