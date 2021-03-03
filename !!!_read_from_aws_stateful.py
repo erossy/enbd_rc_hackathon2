@@ -13,7 +13,7 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 # Setting serial
 # Setting serial port parameters
-serial_port = "COM4"  # set your serial port
+serial_port = "COM3"  # set your serial port
 serial_baudrate = 115200  # set your baudrate
 serial_timeout = 1  # set your serial timeout
 ser_send = "s".encode()

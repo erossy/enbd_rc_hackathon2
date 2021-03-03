@@ -32,7 +32,6 @@ except serialutil.SerialException:
 
 # Setting the initial parameters for velocity and steering
 sleep_timer = 0.1
-
 # Setting MQTT client variables (adjust certs paths and client name)
 client_name = "Mikhail_PC_listen"
 root_ca_path = "root-ca.pem"
@@ -103,3 +102,8 @@ while True:
             print("Serial port closed with error")
             pass
         print("Listener stopped")
+    except:
+        try:
+            myMQTTClient.disconnect()
+            myMQTTClient.connect()
+            myMQTTClient.subscribe("home/velocity", 1, listener_aws)
