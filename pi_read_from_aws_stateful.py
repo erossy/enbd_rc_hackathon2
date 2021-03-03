@@ -1,10 +1,8 @@
 # import time
 from time import sleep
-import serial
 from serial import Serial
 from serial import serialutil
-from pebble import concurrent
-from concurrent.futures import TimeoutError
+from pebble import ProcessPool
 # from pynput import keyboard
 # from statistics import mean
 # import os
@@ -27,7 +25,7 @@ counter = []
 try:
     ser = Serial(serial_port, baudrate=serial_baudrate, timeout=serial_timeout)
     print("The port {0} is available".format(ser))
-except serial.serialutil.SerialException:
+except serialutil.SerialException:
     print("The port is at use, attempting to close and reopen")
     ser.close()
     ser.open()
@@ -72,7 +70,6 @@ def listener_aws(self, params, packet):
         myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
 
-@concurrent.process(timeout=0.5)
 def send_to_serial():
     global ser_send
     global ser_queue
@@ -99,14 +96,15 @@ print('Connected')
 # MQTT subscription
 myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
-future = send_to_serial()
-
 while True:
     try:
-        result = future.result()
-    except TimeoutError:
-        print("Serial iteration took longer than 0.5 seconds.")
+        with ProcessPool(max_workers=1, max_tasks=1) as pool:
+            future = pool.schedule(send_to_serial, timeout=sleep_timer*3)
+            try:
+                result = future.result()  # blocks until results are ready
+            except TimeoutError:
+                print("Function took longer than {0} seconds.".format(sleep_timer*3))
     except KeyboardInterrupt:
-        ser.close()
-        MQTT.disconnect()
-        print("Listener stopped")
+            ser.close()
+            MQTT.disconnect()
+            print("Listener stopped")
