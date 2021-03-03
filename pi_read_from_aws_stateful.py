@@ -88,11 +88,11 @@ def send_to_serial():
     ser.write(ser_send)
     serial_test()
     with ProcessPool(max_workers=1, max_tasks=1) as pool:
-        future = pool.schedule(serial_test, timeout=sleep_timer*3)
+        future = pool.schedule(serial_test, timeout=sleep_timer*10)
         try:
             result = future.result()  # blocks until results are ready
         except TimeoutError:
-            print("Function took longer than {0} seconds.".format(sleep_timer*3))
+            print("Function took longer than {0} seconds.".format(sleep_timer*10)
             ser.close()
             ser.open()
     sleep(sleep_timer)
