@@ -75,7 +75,7 @@ def send_to_serial():
     if len(ser_queue) > 0:
         ser_send = ser_queue.pop(-1)
         ser_queue = []
-    print("Writing to serial: " + ser_send.decode())
+    print("Writing to serial: " + ser_send.decode()) ## this guy hangs
     ser.write(ser_send)
     try:
         print(ser.readline().decode().strip())
@@ -98,7 +98,9 @@ myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
 while True:
     try:
+        ser.open()
         send_to_serial()
+        ser.close()
     except KeyboardInterrupt:
         ser.close()
         MQTT.disconnect()
