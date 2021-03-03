@@ -99,11 +99,11 @@ myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 while True:
     try:
         with ProcessPool(max_workers=1, max_tasks=1) as pool:
-            future = pool.schedule(send_to_serial, timeout=sleep_timer*3)
+            future = pool.schedule(send_to_serial, timeout=sleep_timer*10)
             try:
                 result = future.result()  # blocks until results are ready
             except TimeoutError:
-                print("Function took longer than {0} seconds.".format(sleep_timer*3))
+                print("Function took longer than {0} seconds.".format(sleep_timer*10))
     except KeyboardInterrupt:
             ser.close()
             MQTT.disconnect()
