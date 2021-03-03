@@ -94,11 +94,12 @@ print('Connected')
 # MQTT subscription
 myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
+p1 = Process(target=send_to_serial(), name="Send_to_serial")
+p1.start()
+
 while True:
     try:
-        p1 = Process(target=send_to_serial(), name="Send_to_serial")
-        p1.start()
-        print(p1.exitcode)
+        p1.join()
     except KeyboardInterrupt:
         ser.close()
         MQTT.disconnect()
