@@ -73,8 +73,12 @@ def send_to_serial():
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
     print(ser.readline().decode().strip())
-    counter.append(ser.readline().decode().strip())
-    print(len(counter))
+    try:
+        counter.append(ser.readline().decode().strip())
+        print(len(counter))
+    except UnicodeDecodeError:
+        ser.close()
+        ser.open()
     sleep(sleep_timer)
 
 
