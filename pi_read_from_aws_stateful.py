@@ -59,9 +59,9 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 def listener_aws(self, params, packet):
     sleep(sleep_timer*1.5)
     try:
-        ser_queue = []
-        ser_queue.append(packet.payload)
-        ser.write(packet.payload)
+        if len(ser_queue) <= 1:
+            ser_queue.append(packet.payload)
+            ser.write(packet.payload)
         print("Current queue: ")
         print(ser_queue)
     except AWSIoTMQTTClientSDK.exception.AWSIoTExceptions.connectTimeoutException:
