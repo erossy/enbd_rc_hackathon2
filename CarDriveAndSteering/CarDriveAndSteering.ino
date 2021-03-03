@@ -3,11 +3,24 @@
 
 
 /*
+Motor Driver Truth Table
+
+Pololu High-Power Motor Driver 18v15
+
+PWM  DIR OUTA  OUTB   Operation
+H     L   L     H     Forward
+H     H   H     L     Backward
+L     X   L     L     Brake
+
+*/
+
+/*
  * Declare variables
  */
 // MOTOR VARIABLES
 int break_power = 0;
-int current_power = 0;
+int current_forward_power = 0;
+int current_backward_power = 0;
 int PWM = 9;            // PWM 
 int DIR = 8;            // DIRECTION
 int RESET = 7;          // RESET
@@ -28,8 +41,8 @@ int max_right = 130;        //MAXIMUM RIGHT
 void setup() 
 {
 
-    // Create serial port with 9600 connection
-    Serial.begin(9600); 
+    // Create serial port with 115200 connection
+    Serial.begin(115200); 
     Serial.println("Car Drive and Steering System setup started..."); 
     setupMotor();
     setupSteering();
@@ -107,9 +120,9 @@ void setupMotor()
     pinMode(PWM, OUTPUT);
     pinMode(DIR, OUTPUT);
     pinMode(RESET, OUTPUT);
+    //digitalWrite(DIR, LOW);
     digitalWrite(RESET, HIGH);
     analogWrite(PWM, break_power);
-    delay(500);
     Serial.println("Motor driver instantiated."); 
 }
 
@@ -125,41 +138,47 @@ void setupSteering()
 
 void forward ()
 {
+      current_backward_power = break_power;
       digitalWrite(DIR, HIGH);
-      if(current_power < min_power)
+      //digitalWrite(RESET, HIGH);
+      if(current_forward_power < min_power)
       {
-        current_power = min_power;
+        current_forward_power = min_power;
       }
-      Serial.println("Current motor speed:");
-      Serial.println(current_power);
-      if(current_power < max_power)
+      Serial.println("Current forward motor speed:");
+      Serial.println(current_forward_power);
+      delay(500);
+      if(current_forward_power < max_power)
       {
-        current_power = current_power + 1;
+        current_forward_power = current_forward_power + 1;
       }
-      analogWrite(PWM, current_power);
-      Serial.println("New motor speed:");
-      Serial.println(current_power);
-      delay(100);
+      analogWrite(PWM, current_forward_power);
+      Serial.println("New forward motor speed:");
+      Serial.println(current_forward_power);
+      //delay(100);
 }
 
 void backward ()
 {
-  
+
+      current_forward_power = break_power;
       digitalWrite(DIR, LOW);
-      if(current_power < min_power)
+      //digitalWrite(RESET, HIGH);
+      if(current_backward_power < min_power)
       {
-        current_power = min_power;
+        current_backward_power = min_power;
       }
-      Serial.println("Current motor speed:");
-      Serial.println(current_power);
-      if(current_power < max_power)
+      Serial.println("Current backward motor speed:");
+      Serial.println(current_backward_power);
+      delay(500);
+      if(current_backward_power < max_power)
       {
-        current_power = current_power + 1;
+        current_backward_power = current_backward_power + 1;
       }
-      analogWrite(PWM, current_power);
-      Serial.println("New motor speed:");
-      Serial.println(current_power);
-      delay(100);
+      analogWrite(PWM, current_backward_power);
+      Serial.println("New backward motor speed:");
+      Serial.println(current_backward_power);
+      //delay(100);
 }
 
 void center()
@@ -191,13 +210,26 @@ void left()
 
 void stopping ()
 {
-     
-  //Gradual breaking in increment of 10.
-  for(int i = current_power; i > break_power;i = i-20)
+  if(current_forward_power > min_power)
   {
-    Serial.println("Gradual breaking:" + i);
-    analogWrite(PWM, i);
+      //Gradual breaking in increment of 10.
+      for(int i = current_forward_power; i > break_power;i = i-20)
+      {
+        Serial.println("Gradual breaking:" + i);
+        analogWrite(PWM, i);
+      }
+      analogWrite(PWM, break_power);
   }
-  analogWrite(PWM, break_power);
+  if(current_backward_power > min_power)
+  {
+      //Gradual breaking in increment of 10.
+      for(int i = current_backward_power; i > break_power;i = i-20)
+      {
+        Serial.println("Gradual breaking:" + i);
+        analogWrite(PWM, i);
+      }
+      analogWrite(PWM, break_power);
+  }  
+
 
 }
