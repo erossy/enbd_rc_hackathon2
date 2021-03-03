@@ -86,6 +86,7 @@ def send_to_serial():
         ser_queue = []
     print("Writing to serial: " + ser_send.decode()) ## this guy hangs
     ser.write(ser_send)
+    serial_test()
     with ProcessPool(max_workers=1, max_tasks=1) as pool:
         future = pool.schedule(serial_test, timeout=sleep_timer*3)
         try:
@@ -105,8 +106,6 @@ print('Connected')
 
 # MQTT subscription
 myMQTTClient.subscribe("home/velocity", 1, listener_aws)
-
-send_to_serial()
 
 while True:
     try:
