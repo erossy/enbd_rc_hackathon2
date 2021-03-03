@@ -1,7 +1,8 @@
-# import RPi.GPIO as GPIO
+import time
 from time import sleep
 from serial import Serial
 from serial import serialutil
+from multiprocessing import Process
 # from pynput import keyboard
 # from statistics import mean
 # import os
@@ -57,29 +58,32 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 
 def listener_aws(self, params, packet):
     sleep(sleep_timer*1.5)
-    ser_queue.append(packet.payload)
-    ser.write(packet.payload)
-    print("Current queue: ")
-    print(ser_queue)
-
+    try:
+        ser_queue.append(packet.payload)
+        ser.write(packet.payload)
+        print("Current queue: ")
+        print(ser_queue)
+    except AWSIoTMQTTClientSDK.exception.AWSIoTExceptions.connectTimeoutException:
+        print("###_MQTT CONNECTION ERROR_###")
+        myMQTTClient.connect()
+        myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
 def send_to_serial():
     global ser_send
     global ser_queue
-    global counter
-    if len(ser_queue) > 0:
-        ser_send = ser_queue.pop(-1)
-        ser_queue = []
-    print("Writing to serial: " + ser_send.decode())
-    ser.write(ser_send)
-    try:
-        print(ser.readline().decode().strip())
-    except UnicodeDecodeError:
-        print("###_Serial buffer overflow, resetting serial...###")
-        ser.close()
-        ser.open()
-    sleep(sleep_timer)
-
+    while True:
+        if len(ser_queue) > 0:
+            ser_send = ser_queue.pop(-1)
+            ser_queue = []
+        print("Writing to serial: " + ser_send.decode())
+        ser.write(ser_send)
+        try:
+            print(ser.readline().decode().strip())
+        except UnicodeDecodeError, serialutil.SerialException:
+            print("###_Serial error, resetting serial...###")
+            ser.close()
+            ser.open()
+        sleep(sleep_timer)
 
 # Collect events until released
 
@@ -91,21 +95,14 @@ print('Connected')
 # MQTT subscription
 myMQTTClient.subscribe("home/velocity", 1, listener_aws)
 
+p1 = Process(target=send_to_serial(), name="Send_to_serial")
+p1.start()
+p1.terminate()
+print(p1.exitcode())
 
 while True:
     try:
-        send_to_serial()
+        pass
     except KeyboardInterrupt:
-        try:
-            myMQTTClient.disconnect()
-            print("MQTT disconnected")
-        except AWSIoTMQTTClientSDK.exception.AWSIoTExceptions.connectTimeoutException:
-            print("MQTT disconnected with error")
-            pass
-        try:
-            ser.close()
-            print("Serial port closed")
-        except serialutil.SerialException:
-            print("Serial port closed with error")
-            pass
+        pass
         print("Listener stopped")
