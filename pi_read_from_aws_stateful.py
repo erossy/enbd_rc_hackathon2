@@ -99,6 +99,7 @@ p1 = Process(target=send_to_serial(), name="Send_to_serial")
 p1.start()
 p1.terminate()
 sleep(5)
+print("BLABLABLA")
 print(p1.exitcode())
 
 while True:
