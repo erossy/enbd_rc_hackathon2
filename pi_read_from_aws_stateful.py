@@ -95,6 +95,7 @@ print('Connected')
 
 # MQTT subscription
 myMQTTClient.subscribe("home/velocity", 1, listener_aws)
+def send_to_serial():
 
 while True:
     try:
