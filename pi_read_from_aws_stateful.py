@@ -77,6 +77,7 @@ def send_to_serial():
         counter.append(ser.readline().decode().strip())
         print(len(counter))
     except UnicodeDecodeError:
+        print("###_Serial buffer overflow, resetting serial...###")
         ser.close()
         ser.open()
     sleep(sleep_timer)
