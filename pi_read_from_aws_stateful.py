@@ -6,7 +6,7 @@ from serial import serialutil
 # from statistics import mean
 # import os
 # import sys
-# import AWSIoTPythonSDK
+import AWSIoTPythonSDK
 # sys.path.insert(0, os.path.dirname(AWSIoTPythonSDK.__file__))
 # Now the import statement should work
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
@@ -92,7 +92,7 @@ while True:
         try:
             myMQTTClient.disconnect()
             print("MQTT disconnected")
-        except:
+        except AWSIoTMQTTClientSDK.exception.AWSIoTExceptions.connectTimeoutException:
             print("MQTT disconnected with error")
             pass
         try:
@@ -102,8 +102,6 @@ while True:
             print("Serial port closed with error")
             pass
         print("Listener stopped")
-    except:
-        try:
-            myMQTTClient.disconnect()
+    except AWSIoTPythonSDK.exception.AWSIoTExceptions.connectTimeoutException:
             myMQTTClient.connect()
             myMQTTClient.subscribe("home/velocity", 1, listener_aws)
