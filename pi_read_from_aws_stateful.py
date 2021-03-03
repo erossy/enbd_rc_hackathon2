@@ -110,13 +110,7 @@ send_to_serial()
 
 while True:
     try:
-        with ProcessPool(max_workers=1, max_tasks=1) as pool:
-            future = pool.schedule(send_to_serial, timeout=sleep_timer*3)
-            try:
-                result = future.result()  # blocks until results are ready
-            except TimeoutError:
-                print("Function took longer than {0} seconds.".format(sleep_timer*3))
-                pass
+        send_to_serial()
     except KeyboardInterrupt:
             ser.close()
             MQTT.disconnect()
