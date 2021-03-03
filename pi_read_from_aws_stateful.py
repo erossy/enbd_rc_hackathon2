@@ -18,6 +18,7 @@ serial_baudrate = 115200  # set your baudrate
 serial_timeout = 1  # set your serial timeout
 ser_send = "s".encode()
 ser_queue = []
+counter = []
 
 # Opening serial connectivity
 try:
@@ -65,12 +66,15 @@ def listener_aws(self, params, packet):
 def send_to_serial():
     global ser_send
     global ser_queue
+    global counter
     if len(ser_queue) > 0:
         ser_send = ser_queue.pop(-1)
         ser_queue = []
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
-    print(ser.readline().decode())
+    print(ser.readline().decode().trim())
+    counter.append(ser.readline().decode().trim())
+    print(len(counter))
     sleep(sleep_timer)
 
 
