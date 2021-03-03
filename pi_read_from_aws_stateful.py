@@ -100,6 +100,7 @@ while True:
         p1 = Process(target=send_to_serial(), name="Send_to_serial")
         p1.start()
         p1.terminate()
+        #
     except KeyboardInterrupt:
         ser.close()
         MQTT.disconnect()
