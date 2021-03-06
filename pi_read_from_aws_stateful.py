@@ -60,12 +60,13 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 
 def listener_aws(self, params, packet):
     global ser_write_counter
+    global ser_send
     sleep(sleep_timer*1.5)
     ser_write_counter = ser_write_counter + 1
-    payload = packet.payload
+    ser_send = packet.payload
     # ser.write(packet.payload)
     print("Current write queu =  " + str(ser_write_counter))
-    return(payload)
+
 
 
 def send_to_serial():
@@ -73,8 +74,8 @@ def send_to_serial():
     global ser_write_counter
     global ser_read_counter
     global payload
-    if ser_write_counter > 0:
-        ser_send = payload
+    #if ser_write_counter > 0:
+    #    ser_send = payload
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
     if(len(ser.readline()) != 0):
