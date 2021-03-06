@@ -58,7 +58,7 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 def listener_aws(self, params, packet):
     sleep(sleep_timer*1.5)
     ser_queue.append(packet.payload)
-    ser.write(packet.payload)
+    # ser.write(packet.payload)
     print("Current queue: ")
     print(ser_queue)
 
