@@ -73,7 +73,7 @@ def send_to_serial():
     global ser_write_counter
     global ser_read_counter
     global payload
-    if len(ser_queue) > 0:
+    if ser_write_counter > 0:
         ser_send = payload
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
