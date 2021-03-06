@@ -16,9 +16,12 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 serial_port = "/dev/ttyACM0"  # set your serial port
 serial_baudrate = 115200  # set your baudrate
 serial_timeout = 1  # set your serial timeout
+# ser_send = "s".encode()
+# ser_queue = []
+# counter = []
 ser_send = "s".encode()
-ser_queue = []
-counter = []
+ser_write_counter = 0
+ser_read_counter = 0
 
 # Opening serial connectivity
 try:
@@ -56,31 +59,37 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 
 
 def listener_aws(self, params, packet):
+    global ser_write_counter
     sleep(sleep_timer*1.5)
-    ser_queue.append(packet.payload)
+    ser_write_counter = ser_write_counter + 1
+    payload = packet.payload
     # ser.write(packet.payload)
-    print("Current queue: ")
-    print(ser_queue)
+    print("Current write queu =  " + str(ser_write_counter))
+    return (payload)
 
 
-def send_to_serial():
+def send_to_serial(payload):
     global ser_send
-    global ser_queue
-    global counter
+    global ser_write_counter
+    global ser_read_counter
     if len(ser_queue) > 0:
-        ser_send = ser_queue.pop(-1)
-        ser_queue = []
+        ser_send = payload
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
-    #print(ser.readline().decode().strip())
-    try:
-        counter.append(ser.readline().decode().strip())
-        print(len(counter))
-    except UnicodeDecodeError:
-        print("###_Serial buffer overflow, resetting serial...###")
-        ser.close()
-        ser.open()
+    if(len(ser.readline()) != 0):
+        ser_read_counter = ser_read_counter + 1
+    buffer = ser_write_counter - ser_read_counter
+    print("Current buffer situation = " + str(buffer))
     sleep(sleep_timer)
+    # print(ser.readline().decode().strip())
+    # try:
+    #    x=(ser.readline().decode().strip())
+    #    # print(len(counter))
+    # except UnicodeDecodeError:
+    #    print("###_Serial buffer overflow, resetting serial...###")
+    #    ser.close()
+    #    ser.open()
+    #  sleep(sleep_timer)
 
 
 # Collect events until released
