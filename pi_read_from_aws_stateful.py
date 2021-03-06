@@ -81,6 +81,8 @@ def send_to_serial():
     if(len(ser.readline()) != 0):
         ser_read_counter = ser_read_counter + 1
     buffer = ser_write_counter - ser_read_counter
+    if buffer <= 0:
+        buffer == 0
     print("Current buffer situation = " + str(buffer))
     sleep(sleep_timer)
     # print(ser.readline().decode().strip())
