@@ -61,7 +61,7 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 def listener_aws(self, params, packet):
     global ser_write_counter
     global ser_send
-    sleep(sleep_timer*1.5)
+    sleep(sleep_timer)
     ser_write_counter = ser_write_counter + 1
     ser_send = packet.payload
     # ser.write(packet.payload)
