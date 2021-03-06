@@ -17,7 +17,8 @@ serial_port = "COM3"  # set your serial port
 serial_baudrate = 115200  # set your baudrate
 serial_timeout = 1  # set your serial timeout
 ser_send = "s".encode()
-ser_queue = []
+ser_write_counter = 0
+ser_read_counter = 0
 
 # Opening serial connectivity
 try:
@@ -56,11 +57,14 @@ myMQTTClient.configureMQTTOperationTimeout(1000)
 
 
 def listener_aws(self, params, packet):
+    global ser_write_counter
     sleep(sleep_timer*1.5)
-    ser_queue.append(packet.payload)
-    ser.write(packet.payload)
-    print("Current queue: ")
-    print(ser_queue)
+    ser_write_counter = ser_write_counter + 1
+    payload = packet.payload
+    # ser.write(packet.payload)
+    print("Current write queu =  " + str(ser_write_counter))
+    return (payload)
+
 
 
 def on_press(key):
@@ -91,15 +95,18 @@ def on_release(key):
         pass
 
 
-def send_to_serial():
+def send_to_serial(payload):
     global ser_send
-    global ser_queue
+    global ser_write_counter
+    global ser_read_counter
     if len(ser_queue) > 0:
-        ser_send = ser_queue.pop(-1)
-        ser_queue = []
+        ser_send = payload
     print("Writing to serial: " + ser_send.decode())
     ser.write(ser_send)
-    print(ser.readline())
+    if(len(ser.readline()) != 0):
+        ser_read_counter = ser_read_counter + 1
+    buffer = ser_write_counter - ser_read_counter
+    print("Current buffer situation = " + str(buffer))
     sleep(sleep_timer)
 
 
