@@ -65,13 +65,14 @@ def listener_aws(self, params, packet):
     payload = packet.payload
     # ser.write(packet.payload)
     print("Current write queu =  " + str(ser_write_counter))
-    return (payload)
+    return(payload)
 
 
-def send_to_serial(payload):
+def send_to_serial():
     global ser_send
     global ser_write_counter
     global ser_read_counter
+    global payload
     if len(ser_queue) > 0:
         ser_send = payload
     print("Writing to serial: " + ser_send.decode())
